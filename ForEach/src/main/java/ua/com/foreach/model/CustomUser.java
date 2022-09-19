@@ -25,6 +25,5 @@ public class CustomUser {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
     private Status status;
-    @Column(name = "userSurname")
-    private String name;
+
 }
