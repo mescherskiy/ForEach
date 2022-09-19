@@ -26,5 +26,5 @@ public class CustomUser {
     @Column(name = "status")
     private Status status;
     @Column(name = "userSurname")
-    private String surname;
+    private String name;
 }
