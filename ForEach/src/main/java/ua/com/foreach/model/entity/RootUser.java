@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "root_users")
+@Table(name = "root_users", schema = "foreachdb")
 public class RootUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

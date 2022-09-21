@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "foreachdb")
 public class CustomUser {
 
     @Id
