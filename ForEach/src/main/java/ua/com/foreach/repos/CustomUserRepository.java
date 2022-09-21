@@ -1,7 +1,7 @@
 package ua.com.foreach.repos;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ua.com.foreach.model.CustomUser;
+import ua.com.foreach.model.entity.CustomUser;
 
 import java.util.Optional;
 

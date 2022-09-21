@@ -3,8 +3,8 @@ package ua.com.foreach.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ua.com.foreach.model.CustomUser;
-import ua.com.foreach.model.Status;
+import ua.com.foreach.model.entity.CustomUser;
+import ua.com.foreach.model.entity.Status;
 
 import java.util.Collection;
 import java.util.List;
