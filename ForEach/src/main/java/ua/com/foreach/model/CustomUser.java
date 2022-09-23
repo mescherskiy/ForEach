@@ -29,9 +29,11 @@ public class CustomUser implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
     private Role role;
-    @Enumerated(value = EnumType.STRING)
-/*    @Column(name = "status")
+
+/*    @Enumerated(value = EnumType.STRING)
+    @Column(name = "status")
     private Status status;*/
+
     private Boolean locked = false;
     private Boolean enabled = false;
 
