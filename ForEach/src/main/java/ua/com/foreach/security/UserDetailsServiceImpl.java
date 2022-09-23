@@ -14,7 +14,7 @@ import ua.com.foreach.repos.CustomUserRepository;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Service("userDetailsServiceImpl")
+@Service
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -69,7 +69,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return token;
     }
 
-    public int enableAppUser(String email) {
+    public int enableCustomUser(String email) {
         return userRepository.enableCustomUser(email);
     }
 
