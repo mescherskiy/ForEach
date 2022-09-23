@@ -3,6 +3,7 @@ package ua.com.foreach.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
@@ -25,4 +26,11 @@ public class CustomUser {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
     private Status status;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_languages",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id"))
+    private Set<ProgrammingLanguage> languages;
+
 }
