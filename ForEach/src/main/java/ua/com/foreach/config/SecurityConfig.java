@@ -10,13 +10,20 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ua.com.foreach.security.oauth2.AuthHandler;
 import ua.com.foreach.security.oauth2.CustomOAuth2UserService;
+
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -32,7 +39,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeRequests()
@@ -58,12 +65,23 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/auth/login");
         return http.build();
     }
+/*
+Not correct
+ */
+//    @Bean
+//    @Primary
+//    public AuthenticationManagerBuilder getAuth(AuthenticationManagerBuilder auth) throws Exception {
+//        return auth.authenticationProvider(daoAuthenticationProvider());
+//    }
 
-    @Bean
-    @Primary
-    public AuthenticationManagerBuilder getAuth(AuthenticationManagerBuilder auth) throws Exception {
-        return auth.authenticationProvider(daoAuthenticationProvider());
+    /*
+    todo: create authentication method
+     */
+  /*  @Bean
+    protected UserDetailsManager configureAuthentication() {
+        return new InMemoryUserDetailsManager();
     }
+    */
 
     @Bean
     protected PasswordEncoder passwordEncoder() {
