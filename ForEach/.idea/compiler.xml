@@ -10,9 +10,6 @@
         <module name="ForEach" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="ForEach" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
