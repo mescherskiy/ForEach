@@ -5,12 +5,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.foreach.email.EmailSender;
 import ua.com.foreach.model.CustomUser;
+import ua.com.foreach.model.ProgrammingLanguage;
 import ua.com.foreach.model.Role;
 import ua.com.foreach.registration.token.ConfirmationToken;
 import ua.com.foreach.registration.token.ConfirmationTokenService;
+import ua.com.foreach.repos.LanguageRepository;
 import ua.com.foreach.security.UserDetailsServiceImpl;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -20,28 +24,27 @@ public class RegistrationService {
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+    private final LanguageRepository languageRepository;
 
-    public String register(RegistrationRequest request) {
-        boolean isValidEmail = emailValidator.test(request.getEmail());
+    @Transactional
+    public void register(String email, String password, String firstName, String lastName,
+                         String[] languages) {
+        boolean isValidEmail = emailValidator.test(email);
 
         if (!isValidEmail) {
             throw new IllegalArgumentException("email is not valid");
         }
+        Set<ProgrammingLanguage> langs = new HashSet<>();
+        for (String language : languages) {
+            langs.add(languageRepository.findByLanguage(language).get());
+        }
 
-        String token = userDetailsService.signUpUser(
-                new CustomUser(
-                        request.getFirstName(),
-                        request.getLastName(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        Role.USER
-                )
-        );
+        CustomUser user = new CustomUser(email, password, firstName, lastName,
+                Role.USER, langs, false, false);
+        String token = userDetailsService.signUpUser(user);
 
         String link = "http://localhost:8080/registration/confirm?token=" + token;
-        emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
-
-        return token;
+        emailSender.send(user.getEmail(), buildEmail(user.getFirstName(), link));
     }
 
 

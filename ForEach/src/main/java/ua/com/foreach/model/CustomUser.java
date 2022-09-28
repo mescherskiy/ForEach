@@ -31,30 +31,36 @@ public class CustomUser implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_languages",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
     private Set<ProgrammingLanguage> languages;
 
-/*    @Enumerated(value = EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
-*/
-
+    @Column(name = "locked")
     private Boolean locked = false;
+    @Column(name = "enabled")
     private Boolean enabled = false;
 
-    public CustomUser(String firstName,
-                   String lastName,
-                   String email,
-                   String password,
-                   Role role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public CustomUser(String email, String password, String firstName, String lastName, Role role, Boolean locked, Boolean enabled) {
         this.email = email;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.role = role;
+        this.locked = locked;
+        this.enabled = enabled;
+    }
+
+    public CustomUser(String email, String password, String firstName, String lastName, Role role, Set<ProgrammingLanguage> languages, Boolean locked, Boolean enabled) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.languages = languages;
+        this.locked = locked;
+        this.enabled = enabled;
     }
 
     @Override

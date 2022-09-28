@@ -1,8 +1,18 @@
 package ua.com.foreach.model;
 
-import javax.persistence.*;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import ua.com.foreach.repos.LanguageRepository;
 
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Data
+@AllArgsConstructor
 @Entity
 @Table(name = "languages")
 public class ProgrammingLanguage {
@@ -19,4 +29,9 @@ public class ProgrammingLanguage {
 
     public ProgrammingLanguage() {
     }
+
+    public ProgrammingLanguage(String language) {
+        this.language = language;
+    }
+
 }
