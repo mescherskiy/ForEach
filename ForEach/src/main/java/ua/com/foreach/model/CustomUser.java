@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -30,23 +31,36 @@ public class CustomUser implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-/*    @Enumerated(value = EnumType.STRING)
-    @Column(name = "status")
-    private Status status;*/
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_languages",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id"))
+    private Set<ProgrammingLanguage> languages;
 
+    @Column(name = "locked")
     private Boolean locked = false;
+    @Column(name = "enabled")
     private Boolean enabled = false;
 
-    public CustomUser(String firstName,
-                   String lastName,
-                   String email,
-                   String password,
-                   Role role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public CustomUser(String email, String password, String firstName, String lastName, Role role, Boolean locked, Boolean enabled) {
         this.email = email;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.role = role;
+        this.locked = locked;
+        this.enabled = enabled;
+    }
+
+    public CustomUser(String email, String password, String firstName, String lastName, Role role, Set<ProgrammingLanguage> languages, Boolean locked, Boolean enabled) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.languages = languages;
+        this.locked = locked;
+        this.enabled = enabled;
     }
 
     @Override
