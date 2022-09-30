@@ -25,6 +25,7 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
     private final LanguageRepository languageRepository;
+    private final static String MAIL_SUBJECT = "Confirm your email";
 
     @Transactional
     public void register(String email, String password, String firstName, String lastName,
@@ -44,7 +45,7 @@ public class RegistrationService {
         String token = userDetailsService.signUpUser(user);
 
         String link = "http://localhost:8080/registration/confirm?token=" + token;
-        emailSender.send(user.getEmail(), buildEmail(user.getFirstName(), link));
+        emailSender.send(user.getEmail(), buildEmail(user.getFirstName(), link), MAIL_SUBJECT);
     }
 
 
