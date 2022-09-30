@@ -19,4 +19,10 @@ public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
     @Query("UPDATE CustomUser a " +
             "SET a.enabled = TRUE WHERE a.email = ?1")
     int enableCustomUser(String email);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE CustomUser a " +
+            "SET a.password = ?1 WHERE a.id = ?2")
+    int updateUserPassword(String newPassword, Long user_id);
 }

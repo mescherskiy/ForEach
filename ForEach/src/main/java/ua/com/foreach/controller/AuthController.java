@@ -17,4 +17,7 @@ public class AuthController {
 
     @GetMapping("/registration")
     public String getRegistrationPage() {return "registration"; }
+
+    @GetMapping("/reset_password")
+    public String getResetPasswordPage() {return "reset_password_page"; }
 }
