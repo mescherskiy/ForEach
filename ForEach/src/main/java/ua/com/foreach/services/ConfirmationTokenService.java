@@ -1,7 +1,9 @@
-package ua.com.foreach.registration.token;
+package ua.com.foreach.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ua.com.foreach.models.ConfirmationToken;
+import ua.com.foreach.repos.ConfirmationTokenRepository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

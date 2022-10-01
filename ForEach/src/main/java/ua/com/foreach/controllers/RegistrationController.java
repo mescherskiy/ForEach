@@ -1,19 +1,11 @@
-package ua.com.foreach.registration;
+package ua.com.foreach.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foreach.model.CustomUser;
-import ua.com.foreach.model.ProgrammingLanguage;
-import ua.com.foreach.model.Role;
+import ua.com.foreach.services.RegistrationService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/registration")

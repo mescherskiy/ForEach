@@ -1,4 +1,4 @@
-package ua.com.foreach.email;
+package ua.com.foreach.services;
 
 public interface EmailSender {
     void send(String to, String email);

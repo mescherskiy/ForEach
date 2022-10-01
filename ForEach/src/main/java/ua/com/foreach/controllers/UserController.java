@@ -1,10 +1,10 @@
-package ua.com.foreach.controller;
+package ua.com.foreach.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
-import ua.com.foreach.model.CustomUser;
+import ua.com.foreach.models.CustomUser;
 import ua.com.foreach.repos.CustomUserRepository;
 
 import java.util.List;

@@ -1,8 +1,7 @@
-package ua.com.foreach.registration.token;
+package ua.com.foreach.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ua.com.foreach.model.CustomUser;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package ua.com.foreach.registration;
+package ua.com.foreach.services;
 
 import org.springframework.stereotype.Service;
 

@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.com.foreach.model.CustomUser;
-import ua.com.foreach.registration.token.ConfirmationToken;
-import ua.com.foreach.registration.token.ConfirmationTokenService;
+import ua.com.foreach.models.CustomUser;
+import ua.com.foreach.models.ConfirmationToken;
+import ua.com.foreach.services.ConfirmationTokenService;
 import ua.com.foreach.repos.CustomUserRepository;
 
 import java.time.LocalDateTime;

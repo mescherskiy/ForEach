@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${firstName + ' ' + lastName}">Title</title>
+</head>
+<body>
+<div>
+    <p>User:</p>
+    <h2 th:text="${firstName + ' ' + lastName}"> First name and last name</h2>
+    <div>
+        <p>Languages:</p>
+        <table>
+            <tr th:each="lang : ${languages}">
+                <td style="font-weight: 600" th:text="${lang.getLanguage()}">Language</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
