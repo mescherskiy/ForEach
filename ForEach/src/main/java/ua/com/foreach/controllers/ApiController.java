@@ -1,13 +1,14 @@
 package ua.com.foreach.controllers;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foreach.models.CustomUser;
-import ua.com.foreach.services.GeneralService;
+import ua.com.foreach.models.Project;
+import ua.com.foreach.services.ProjectService;
+import ua.com.foreach.services.UserService;
 
 import java.util.List;
 
@@ -15,10 +16,12 @@ import java.util.List;
 @RequestMapping("api/")
 public class ApiController {
 
-    private final GeneralService generalService;
+    private final UserService userService;
+    private final ProjectService projectService;
 
-    public ApiController(GeneralService generalService) {
-        this.generalService = generalService;
+    public ApiController(UserService userService, ProjectService projectService) {
+        this.userService = userService;
+        this.projectService = projectService;
     }
 
 
@@ -26,7 +29,7 @@ public class ApiController {
     public String profile(Model model) {
         UserDetails user = getCurrentUser();
         String email = user.getUsername();
-        CustomUser customUser = generalService.findByLogin(email);
+        CustomUser customUser = userService.findByLogin(email);
 
         model.addAttribute("email", email);
         model.addAttribute("firstName", customUser.getFirstName());
@@ -40,7 +43,7 @@ public class ApiController {
     @GetMapping("profile/update")
     public String getUpdatePage(Model model) {
         UserDetails user = getCurrentUser();
-        CustomUser customUser = generalService.findByLogin(user.getUsername());
+        CustomUser customUser = userService.findByLogin(user.getUsername());
         model.addAttribute("firstName", customUser.getFirstName());
         model.addAttribute("lastName", customUser.getLastName());
 
@@ -53,27 +56,60 @@ public class ApiController {
         UserDetails user = getCurrentUser();
 
         String login = user.getUsername();
-        generalService.updateUser(login, firstName, lastName);
+        userService.updateUser(login, firstName, lastName);
 
         return "redirect:/api/profile";
     }
 
     @GetMapping("/users")
     public String getAll(Model model) {
-        List<CustomUser> users = generalService.getAll();
+        List<CustomUser> users = userService.getAll();
         model.addAttribute("users", users);
         return "users";
     }
 
     @GetMapping("/user/{id}")
     public String getById(@PathVariable Long id, Model model) {
-        CustomUser user = generalService.getById(id);
+        CustomUser user = userService.getById(id);
         model.addAttribute("email", user.getEmail());
         model.addAttribute("firstName", user.getFirstName());
         model.addAttribute("lastName", user.getLastName());
         model.addAttribute("languages", user.getLanguages());
         return "user";
     }
+
+    @GetMapping("/projects")
+    public String getAllProjectsPage(Model model) {
+        model.addAttribute("projects", projectService.findAll());
+        return "projects"; }
+
+    @GetMapping("/projects/add")
+    public String getNewProjectPage() {
+        return "newProject";
+    }
+
+    @PostMapping("/projects/add")
+    public String addProject(@RequestParam String name,
+                             @RequestParam String description,
+                             @RequestParam String[] language,
+                             @RequestParam Integer teamSize) {
+        UserDetails user = getCurrentUser();
+        projectService.addProject(name, description, user.getUsername(), language, teamSize);
+        return "redirect:/";
+    }
+
+    @GetMapping("/project/{id}")
+    public String getProjectById(Model model, @PathVariable Long id) {
+        Project project = projectService.findById(id);
+        model.addAttribute("name", project.getName());
+        model.addAttribute("description", project.getDescription());
+        model.addAttribute("creator", project.getCreator());
+        model.addAttribute("languages", project.getRequiredLanguages());
+        model.addAttribute("teamSize", project.getNumberOfTeamMembers());
+        model.addAttribute("teamMembers", project.getTeamMembers());
+        return "project";
+    }
+
 
     private UserDetails getCurrentUser() {
         return (UserDetails) SecurityContextHolder

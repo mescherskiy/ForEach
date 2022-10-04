@@ -14,11 +14,6 @@ public class AuthController {
         return "login";
     }
 
-//    @GetMapping("/profile")
-//    public String getSuccessPage() {
-//        return "profile";
-//    }
-
     @GetMapping("/registration")
     public String getRegistrationPage() {return "registration"; }
 

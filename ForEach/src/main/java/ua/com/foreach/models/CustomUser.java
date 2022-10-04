@@ -1,5 +1,7 @@
 package ua.com.foreach.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,13 +9,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Set;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "users")
 public class CustomUser implements UserDetails {
     @Id
@@ -31,7 +32,7 @@ public class CustomUser implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_languages",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
@@ -41,6 +42,94 @@ public class CustomUser implements UserDetails {
     private Boolean locked = false;
     @Column(name = "enabled")
     private Boolean enabled = false;
+
+    @ManyToMany(mappedBy = "teamMembers")
+    private List<Project> projects = new ArrayList<>();
+
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
+//
+//    public String getFirstName() {
+//        return firstName;
+//    }
+//
+//    public void setFirstName(String firstName) {
+//        this.firstName = firstName;
+//    }
+//
+//    public String getLastName() {
+//        return lastName;
+//    }
+//
+//    public void setLastName(String lastName) {
+//        this.lastName = lastName;
+//    }
+//
+//    public Role getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(Role role) {
+//        this.role = role;
+//    }
+//
+//    public Set<ProgrammingLanguage> getLanguages() {
+//        return languages;
+//    }
+//
+//    public void setLanguages(Set<ProgrammingLanguage> languages) {
+//        this.languages = languages;
+//    }
+//
+//    public Boolean getLocked() {
+//        return locked;
+//    }
+//
+//    public void setLocked(Boolean locked) {
+//        this.locked = locked;
+//    }
+//
+//    public Boolean getEnabled() {
+//        return enabled;
+//    }
+//
+//    public void setEnabled(Boolean enabled) {
+//        this.enabled = enabled;
+//    }
+//
+//    public List<Project> getProjects() {
+//        return projects;
+//    }
+//
+//    public void setProjects(List<Project> projects) {
+//        this.projects = projects;
+//    }
+//
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        CustomUser that = (CustomUser) o;
+//        return email.equals(that.email) && password.equals(that.password) && firstName.equals(that.firstName) && lastName.equals(that.lastName) && locked.equals(that.locked) && enabled.equals(that.enabled);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(email, password, firstName, lastName, locked, enabled);
+//    }
 
     public CustomUser(String email, String password, String firstName, String lastName, Role role, Set<ProgrammingLanguage> languages, Boolean locked, Boolean enabled) {
         this.email = email;

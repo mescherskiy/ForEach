@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>New Project</title>
+</head>
+<body>
+    <form action="/api/projects/add" method="post">
+        <label for="name">Project name</label><br>
+        <input type="text" name="name" id="name"><br><br>
+
+        <label for="description">Project description</label><br>
+        <textarea id="description" rows="4" cols="50" name="description" placeholder="Enter project's description here"></textarea>
+
+        <p style="font-weight: bold">Choose programming languages for the project:</p>
+        <label><input type="checkbox" name="language" value="Java">Java</label><br/>
+        <label><input type="checkbox" name="language" value="Python">Python</label><br/>
+        <label><input type="checkbox" name="language" value="C++">C++</label><br/>
+        <label><input type="checkbox" name="language" value="C#">C#</label><br/>
+        <label><input type="checkbox" name="language" value="PHP">PHP</label><br/>
+        <label><input type="checkbox" name="language" value="JavaScript">JavaScript</label><br/>
+        <label><input type="checkbox" name="language" value="TypeScript">TypeScript</label><br/>
+        <label><input type="checkbox" name="language" value="HTML">HTML</label><br/>
+        <label><input type="checkbox" name="language" value="CSS">CSS</label><br/>
+        <label><input type="checkbox" name="language" value="Go">Go</label><br/>
+        <label><input type="checkbox" name="language" value="Ruby">Ruby</label><br/><br/>
+
+        <label for="teamSize">Team size:</label>
+        <input type="number" id="teamSize" name="teamSize">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit">Save new project</button>
+    </form>
+</body>
+</html>

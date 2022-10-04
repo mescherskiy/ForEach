@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${name}">Title</title>
+</head>
+<body>
+    <h2 th:text="${name}">Project name</h2>
+
+    <h3>Project description:</h3>
+    <p th:text="${description}">description</p>
+    <br>
+
+    <h3>Required languages:</h3>
+    <table>
+        <tr th:each="lang : ${languages}">
+            <td th:text="${lang.getLanguage()}">Language</td>
+        </tr>
+    </table>
+    <br>
+
+    <h3>Required number of team members:</h3>
+    <p th:number="${teamSize}">number</p>
+
+    <h3>Project's team members:</h3>
+    <table>
+        <tr th:each="user : ${teamMembers}">
+            <td th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}">User</td>
+        </tr>
+    </table>
+
+</body>
+</html>

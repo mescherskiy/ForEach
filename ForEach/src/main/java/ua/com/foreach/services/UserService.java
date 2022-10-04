@@ -2,17 +2,16 @@ package ua.com.foreach.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 import ua.com.foreach.models.CustomUser;
 import ua.com.foreach.repos.CustomUserRepository;
 
 import java.util.List;
 
 @Service
-public class GeneralService {
+public class UserService {
     private final CustomUserRepository customUserRepository;
 
-    public GeneralService(CustomUserRepository customUserRepository) {
+    public UserService(CustomUserRepository customUserRepository) {
         this.customUserRepository = customUserRepository;
     }
 
