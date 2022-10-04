@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My profile</title>
+</head>
+<body>
+<div>
+    <h1 th:text="${firstName + ' ' + lastName}"> First name and last name</h1>
+
+    <div>
+        <p>Languages:</p>
+        <table>
+            <tr th:each="lang : ${languages}">
+                <td style="font-weight: 600" th:text="${lang.getLanguage()}">Language</td>
+            </tr>
+        </table>
+    </div>
+    <form action="/api/profile/update" method="GET">
+        <button type="submit">Change my profile</button>
+    </form>
+    <form action="/logout" method="POST">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit">Logout</button>
+    </form>
+</div>
+</body>
+</html>

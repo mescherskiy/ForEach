@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All users</title>
+</head>
+<body>
+<table>
+    <tr th:each="user : ${users}">
+        <td><a th:href="@{'/api/user/' + ${user.getId}}" th:text="${user.getFirstName + ' ' + user.getLastName}">User</a></td>
+    </tr>
+</table>
+</body>
+</html>

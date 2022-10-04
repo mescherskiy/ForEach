@@ -5,6 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class AuthController {
+
+    @GetMapping("/")
+    public String getIndexPage() { return "index"; }
+
     @GetMapping("/login")
     public String getLoginPage() {
         return "login";
