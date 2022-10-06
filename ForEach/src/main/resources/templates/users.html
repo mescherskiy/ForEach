@@ -6,8 +6,11 @@
 </head>
 <body>
 <table>
-    <tr th:each="user : ${users}">
-        <td><a th:href="@{'/api/user/' + ${user.getId}}" th:text="${user.getFirstName + ' ' + user.getLastName}">User</a></td>
+    <tr style="vertical-align: center" th:each="user : ${users}">
+        <td style="border: 2px orange solid; padding: 5px">
+            <img style="width: 40px; height: auto; border-radius: 4px; vertical-align: middle" th:src="@{'getImage/' + ${user.getAvatarPath}}"/>
+            <a style="text-decoration: none; font-size: x-large; padding: 25px" th:href="@{'/api/user/' + ${user.getId}}" th:text="${user.getFirstName + ' ' + user.getLastName}">User</a>
+        </td>
     </tr>
 </table>
 </body>

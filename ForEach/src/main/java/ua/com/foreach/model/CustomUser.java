@@ -42,6 +42,8 @@ public class CustomUser implements UserDetails {
     @Column(name = "enabled")
     private Boolean enabled = false;
 
+    private String avatarPath = "default.jpg";
+
     public CustomUser(String email, String password, String firstName, String lastName, Role role, Boolean locked, Boolean enabled) {
         this.email = email;
         this.password = password;

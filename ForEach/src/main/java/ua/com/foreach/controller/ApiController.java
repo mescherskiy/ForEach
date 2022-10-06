@@ -6,9 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ua.com.foreach.model.CustomUser;
 import ua.com.foreach.services.UserService;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -30,6 +32,7 @@ public class ApiController {
         model.addAttribute("lastName", customUser.getLastName());
         model.addAttribute("role", currentUser.getAuthorities());
         model.addAttribute("languages", customUser.getLanguages());
+        model.addAttribute("imagePath", customUser.getAvatarPath());
 
         return "profile";
     }
@@ -69,7 +72,44 @@ public class ApiController {
         model.addAttribute("firstName", user.getFirstName());
         model.addAttribute("lastName", user.getLastName());
         model.addAttribute("languages", user.getLanguages());
+        model.addAttribute("imagePath", user.getAvatarPath());
+
         return "user";
+    }
+
+    @PostMapping("/uploadImage")
+    public String uploadImage(@RequestParam("imageFile") MultipartFile imageFile, Model model) {
+        String returnValue;
+
+        UserDetails user = getCurrentUser();
+        String login = user.getUsername();
+
+        try {
+            userService.updateAvatar(imageFile, login);
+            returnValue = "profile";
+        } catch (IOException e) {
+            e.printStackTrace();
+            returnValue = "login";
+        }
+
+        CustomUser customUser = userService.findByLogin(login);
+        model.addAttribute("firstName", customUser.getFirstName());
+        model.addAttribute("lastName", customUser.getLastName());
+        model.addAttribute("languages", customUser.getLanguages());
+        model.addAttribute("imagePath", customUser.getAvatarPath());
+
+        return  returnValue;
+    }
+
+    @PostMapping("/deleteImage")
+    public String deleteImage() {
+
+        UserDetails currentUser = getCurrentUser();
+        CustomUser user = userService.findByLogin(currentUser.getUsername());
+
+        user.setAvatarPath("default.jpg");
+
+        return "redirect:/api/profile";
     }
 
     private UserDetails getCurrentUser(){

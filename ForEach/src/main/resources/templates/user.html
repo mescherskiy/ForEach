@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${firstName + ' ' + lastName}">Title</title>
+    <style>
+        p {
+            font-size: 24px;
+            color: rgb(181, 118, 0);
+        }
+    </style>
 </head>
 <body>
-<div>
+<div style="text-align: center">
     <p>User:</p>
     <h2 th:text="${firstName + ' ' + lastName}"> First name and last name</h2>
+    <img style="width: 240px; height: auto; border-radius: 20px" th:src="@{'getImage/' + ${imagePath}}"/>
     <div>
         <p>Languages:</p>
-        <table>
+        <table style="margin: auto">
             <tr th:each="lang : ${languages}">
                 <td style="font-weight: 600" th:text="${lang.getLanguage()}">Language</td>
             </tr>
