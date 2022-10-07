@@ -3,14 +3,10 @@ package ua.com.foreach.services;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import ua.com.foreach.model.CustomUser;
 import ua.com.foreach.repos.CustomUserRepository;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -49,18 +45,9 @@ public class UserService {
     }
 
     @Transactional
-    public void updateAvatar(MultipartFile imageFile, String login) throws IOException {
-        CustomUser user = userRepository.findByEmail(login).
-                orElseThrow(() -> new IllegalStateException("user not found!"));
+    public void updateAvatar(CustomUser user, String fileName) throws IOException {
 
-        String folder = "src/main/resources/static/avatars/";
-
-        String fileName = user.getId() + ".jpg";
-        byte[] bytes = imageFile.getBytes();
-        Path path = Paths.get(folder + fileName);
-        Files.write(path, bytes);
-
-        user.setAvatarPath(fileName);
+        user.setAvatarFileName(fileName);
         userRepository.save(user);
     }
 }

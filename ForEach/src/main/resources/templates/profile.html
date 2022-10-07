@@ -28,7 +28,7 @@
 <body>
 <div style="text-align: center">
     <h1 th:text="${firstName + ' ' + lastName}"> First name and last name</h1>
-    <img style="width: 240px; height: auto; border-radius: 20px" th:src="@{'getImage/' + ${imagePath}}"/>
+    <img style="width: 240px; height: auto; border-radius: 20px" th:src="@{'getImage/' + ${avatarFileName}}"/>
     <form action="/api/uploadImage" method="POST" enctype="multipart/form-data">
         <input id = "source_file" style = "size: 50px;" name = "imageFile" type = "file" value = "Choose avatar" />
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.foreach.model.CustomUser;
+import ua.com.foreach.services.ImageService;
 import ua.com.foreach.services.UserService;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ApiController {
 
     private final UserService userService;
+    private final ImageService imageService;
 
     @GetMapping("profile")
     public String profile(Model model){
@@ -32,7 +34,7 @@ public class ApiController {
         model.addAttribute("lastName", customUser.getLastName());
         model.addAttribute("role", currentUser.getAuthorities());
         model.addAttribute("languages", customUser.getLanguages());
-        model.addAttribute("imagePath", customUser.getAvatarPath());
+        model.addAttribute("avatarFileName", customUser.getAvatarFileName());
 
         return "profile";
     }
@@ -72,7 +74,7 @@ public class ApiController {
         model.addAttribute("firstName", user.getFirstName());
         model.addAttribute("lastName", user.getLastName());
         model.addAttribute("languages", user.getLanguages());
-        model.addAttribute("imagePath", user.getAvatarPath());
+        model.addAttribute("avatarFileName", user.getAvatarFileName());
 
         return "user";
     }
@@ -83,20 +85,23 @@ public class ApiController {
 
         UserDetails user = getCurrentUser();
         String login = user.getUsername();
+        CustomUser customUser = userService.findByLogin(login);
+        Long userId = customUser.getId();
+        String fileName = userId + ".jpg";
 
         try {
-            userService.updateAvatar(imageFile, login);
+            imageService.saveAvatar(imageFile, fileName);
+            userService.updateAvatar(customUser, fileName);
             returnValue = "profile";
         } catch (IOException e) {
             e.printStackTrace();
             returnValue = "login";
         }
 
-        CustomUser customUser = userService.findByLogin(login);
         model.addAttribute("firstName", customUser.getFirstName());
         model.addAttribute("lastName", customUser.getLastName());
         model.addAttribute("languages", customUser.getLanguages());
-        model.addAttribute("imagePath", customUser.getAvatarPath());
+        model.addAttribute("avatarFileName", customUser.getAvatarFileName());
 
         return  returnValue;
     }
@@ -107,7 +112,7 @@ public class ApiController {
         UserDetails currentUser = getCurrentUser();
         CustomUser user = userService.findByLogin(currentUser.getUsername());
 
-        user.setAvatarPath("default.jpg");
+        user.setAvatarFileName("default.jpg");
 
         return "redirect:/api/profile";
     }

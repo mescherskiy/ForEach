@@ -14,7 +14,7 @@
 <div style="text-align: center">
     <p>User:</p>
     <h2 th:text="${firstName + ' ' + lastName}"> First name and last name</h2>
-    <img style="width: 240px; height: auto; border-radius: 20px" th:src="@{'getImage/' + ${imagePath}}"/>
+    <img style="width: 240px; height: auto; border-radius: 20px" th:src="@{'getImage/' + ${avatarFileName}}"/>
     <div>
         <p>Languages:</p>
         <table style="margin: auto">
