@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ua.com.foreach.dto.ProjectDTO;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -22,7 +23,7 @@ public class Project {
     private Long id;
     private String name;
     private String description;
-    private String creator;
+    private String author;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "project_languages",
@@ -32,82 +33,19 @@ public class Project {
 
     private Integer numberOfTeamMembers;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "project_users",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(mappedBy = "projects")
     private Set<CustomUser> teamMembers = new HashSet<>();
 
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
-//
-//    public String getCreator() {
-//        return creator;
-//    }
-//
-//    public void setCreator(String creator) {
-//        this.creator = creator;
-//    }
-//
-//    public Set<ProgrammingLanguage> getRequiredLanguages() {
-//        return requiredLanguages;
-//    }
-//
-//    public void setRequiredLanguages(Set<ProgrammingLanguage> requiredLanguages) {
-//        this.requiredLanguages = requiredLanguages;
-//    }
-//
-//    public Integer getNumberOfTeamMembers() {
-//        return numberOfTeamMembers;
-//    }
-//
-//    public void setNumberOfTeamMembers(Integer numberOfTeamMembers) {
-//        this.numberOfTeamMembers = numberOfTeamMembers;
-//    }
-//
-//    public Set<CustomUser> getTeamMembers() {
-//        return teamMembers;
-//    }
-//
-//    public void setTeamMembers(Set<CustomUser> teamMembers) {
-//        this.teamMembers = teamMembers;
-//    }
-//
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Project project = (Project) o;
-//        return name.equals(project.name) && Objects.equals(description, project.description) && numberOfTeamMembers.equals(project.numberOfTeamMembers);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(name, description, numberOfTeamMembers);
-//    }
-
-    public Project(String name, String description, String creator, Set<ProgrammingLanguage> requiredLanguages, Integer numberOfTeamMembers) {
+    public Project(String name, String description, String author, Set<ProgrammingLanguage> requiredLanguages, Integer numberOfTeamMembers) {
         this.name = name;
         this.description = description;
-        this.creator = creator;
+        this.author = author;
         this.requiredLanguages = requiredLanguages;
         this.numberOfTeamMembers = numberOfTeamMembers;
+    }
+
+    public ProjectDTO toDTO() {
+        return ProjectDTO.of(this.name, this.description, this.author, this.requiredLanguages,
+                this.numberOfTeamMembers, this.teamMembers);
     }
 }
