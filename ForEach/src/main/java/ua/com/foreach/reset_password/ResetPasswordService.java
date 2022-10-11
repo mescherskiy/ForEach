@@ -1,73 +1,67 @@
-package ua.com.foreach.services;
+package ua.com.foreach.reset_password;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foreach.models.CustomUser;
-import ua.com.foreach.models.ProgrammingLanguage;
-import ua.com.foreach.models.Role;
-import ua.com.foreach.models.ConfirmationToken;
-import ua.com.foreach.repos.LanguageRepository;
-import ua.com.foreach.security.UserDetailsServiceImpl;
+import ua.com.foreach.email.EmailSender;
+import ua.com.foreach.model.CustomUser;
+import ua.com.foreach.registration.EmailValidator;
+import ua.com.foreach.registration.token.ConfirmationToken;
+import ua.com.foreach.registration.token.ConfirmationTokenService;
+import ua.com.foreach.repos.CustomUserRepository;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class RegistrationService {
+public class ResetPasswordService {
 
-    private final UserDetailsServiceImpl userDetailsService;
     private final EmailValidator emailValidator;
+    private final CustomUserRepository customUserRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
-    private final LanguageRepository languageRepository;
-    private final static String MAIL_SUBJECT = "Confirm your email";
+    private final static String MAIL_SUBJECT = "Reset password";
 
-    @Transactional
-    public void register(String email, String password, String firstName, String lastName,
-                         String[] languages) {
+    public void sendConfirmLink(String email) {
         boolean isValidEmail = emailValidator.test(email);
 
         if (!isValidEmail) {
             throw new IllegalArgumentException("email is not valid");
         }
-        Set<ProgrammingLanguage> langs = new HashSet<>();
-        for (String language : languages) {
-            langs.add(languageRepository.findByLanguage(language).get());
-        }
 
-        CustomUser user = new CustomUser(email, password, firstName, lastName,
-                Role.USER, langs, false, false);
-        String token = userDetailsService.signUpUser(user);
+        CustomUser user = customUserRepository.findByEmail(email).
+                orElseThrow(() -> new IllegalStateException("user not found!"));
 
-        String link = "http://localhost:8080/registration/confirm?token=" + token;
+        String token = UUID.randomUUID().toString();
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
+                user
+        );
+
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+        String link = "http://localhost:8080/reset_password/confirm?token=" + token;
         emailSender.send(user.getEmail(), buildEmail(user.getFirstName(), link), MAIL_SUBJECT);
     }
 
-
     @Transactional
-    public String confirmToken(String token) {
+    public void confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService.getToken(token).
                 orElseThrow(() -> new IllegalStateException("token not found"));
 
-        if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email is already taken");
-        }
-
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
-        if (expiredAt.isBefore(LocalDateTime.now())) {
+        if (confirmationToken.getConfirmedAt() != null ||
+                expiredAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("token expired");
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        userDetailsService.enableCustomUser(confirmationToken.getCustomUser().getEmail());
-
-        return "confirmed";
     }
-
 
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -87,7 +81,7 @@ public class RegistrationService {
                 "                  \n" +
                 "                    </td>\n" +
                 "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n" +
-                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n" +
+                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm reset password</span>\n" +
                 "                    </td>\n" +
                 "                  </tr>\n" +
                 "                </tbody></table>\n" +
@@ -125,7 +119,7 @@ public class RegistrationService {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Forgot your  password?<br><br>We received a request to reset the password for your account.<br>To reset your password, click on the bellow link: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Reset password</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +

@@ -205,9 +205,7 @@ fabric.properties
 .idea/**/azureSettings.xml
 
 ### Maven ###
-target/
-/target/
-*/target/**
+/target/**
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -224,3 +222,5 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+/target/
+/target/classes/
