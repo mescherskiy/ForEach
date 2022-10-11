@@ -1,8 +1,12 @@
 package ua.com.foreach.services;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.com.foreach.dto.UserDTO;
 import ua.com.foreach.models.CustomUser;
 import ua.com.foreach.repos.CustomUserRepository;
 
@@ -15,10 +19,13 @@ public class UserService {
 
     private final CustomUserRepository customUserRepository;
 
+    public UserService(CustomUserRepository customUserRepository) {
+        this.customUserRepository = customUserRepository;
+    }
+
     @Transactional(readOnly = true)
     public CustomUser findByLogin(String login) {
-        return customUserRepository.findByEmail(login).
-                orElseThrow(() -> new IllegalStateException("user not found!"));
+        return customUserRepository.findByLogin(login);
     }
 
     @Transactional(readOnly = true)
@@ -31,18 +38,53 @@ public class UserService {
         return customUserRepository.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
+    public UserDTO findDtoByLogin(String login) {
+        return customUserRepository.findByLogin(login).toDTO();
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDTO> getAllDto() {
+        return customUserRepository.findAll().stream().map(CustomUser::toDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public UserDTO getDtoById(Long id) {
+        return customUserRepository.findById(id).get().toDTO();
+    }
+
+
     @Transactional
-    public void updateUser(String email, String firstName, String lastName) {
-        CustomUser user = customUserRepository.findByEmail(email).get();
+    public CustomUser updateUser(String email, String firstName, String lastName) {
+        CustomUser user = customUserRepository.findByLogin(email);
         if (user == null)
-            return;
+            return null;
 
         user.setFirstName(firstName);
         user.setLastName(lastName);
 
         customUserRepository.save(user);
+
+        return user;
     }
 
+    @Transactional(readOnly = true)
+    public List<CustomUser> findByPattern(String pattern, Pageable pageable) {
+        return customUserRepository.findByPattern(pattern, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDTO> findDtoByPattern(String pattern, Pageable pageable) {
+        return customUserRepository.findByPattern(pattern, pageable).stream().map(CustomUser::toDTO).toList();
+    }
+
+
+    public static UserDetails getCurrentUser() {
+        return (UserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+    }
     @Transactional
     public void updateAvatar(CustomUser user, String fileName) throws IOException {
 

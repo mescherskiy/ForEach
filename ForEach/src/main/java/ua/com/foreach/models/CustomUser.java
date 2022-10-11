@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ua.com.foreach.dto.UserDTO;
 
 import javax.persistence.*;
 import java.util.*;
@@ -32,7 +33,7 @@ public class CustomUser implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_languages",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
@@ -43,7 +44,10 @@ public class CustomUser implements UserDetails {
     @Column(name = "enabled")
     private Boolean enabled = false;
 
-    @ManyToMany(mappedBy = "teamMembers")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_projects",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
     private List<Project> projects = new ArrayList<>();
 
     private String avatarFileName = "default.jpg";
@@ -55,6 +59,18 @@ public class CustomUser implements UserDetails {
         this.lastName = lastName;
         this.role = role;
         this.languages = languages;
+        this.locked = locked;
+        this.enabled = enabled;
+    }
+
+    public CustomUser(String email, String password, String firstName, String lastName, Role role, Set<ProgrammingLanguage> languages, List<Project> projects, Boolean locked, Boolean enabled) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.languages = languages;
+        this.projects = projects;
         this.locked = locked;
         this.enabled = enabled;
     }
@@ -95,4 +111,15 @@ public class CustomUser implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
+    public UserDTO toDTO () {
+        return UserDTO.of(
+                this.getEmail(),
+                this.getFirstName(),
+                this.getLastName(),
+                this.getLanguages(),
+                this.getProjects());
+    }
+
+
 }
