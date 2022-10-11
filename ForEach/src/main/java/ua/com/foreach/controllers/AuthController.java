@@ -1,4 +1,4 @@
-package ua.com.foreach.controller;
+package ua.com.foreach.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

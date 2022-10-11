@@ -1,4 +1,4 @@
-package ua.com.foreach.controller;
+package ua.com.foreach.controllers;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;

@@ -1,15 +1,11 @@
-package ua.com.foreach.reset_password;
+package ua.com.foreach.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foreach.email.EmailSender;
-import ua.com.foreach.model.CustomUser;
-import ua.com.foreach.registration.EmailValidator;
-import ua.com.foreach.registration.token.ConfirmationToken;
-import ua.com.foreach.registration.token.ConfirmationTokenService;
+import ua.com.foreach.models.ConfirmationToken;
+import ua.com.foreach.models.CustomUser;
 import ua.com.foreach.repos.CustomUserRepository;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 

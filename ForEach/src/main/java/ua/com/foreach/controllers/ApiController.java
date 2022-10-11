@@ -6,11 +6,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ua.com.foreach.models.CustomUser;
 import ua.com.foreach.models.Project;
+import ua.com.foreach.services.ImageService;
 import ua.com.foreach.services.ProjectService;
 import ua.com.foreach.services.UserService;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -27,7 +30,7 @@ public class ApiController {
     public String profile(Model model) {
         UserDetails user = getCurrentUser();
         String email = user.getUsername();
-        CustomUser customUser = userService.findByEmail(email).get();
+        CustomUser customUser = userService.findByLogin(email);
 
         model.addAttribute("email", email);
         model.addAttribute("firstName", customUser.getFirstName());
