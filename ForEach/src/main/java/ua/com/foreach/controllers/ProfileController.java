@@ -38,13 +38,13 @@ public class ProfileController {
         UserDTO user = userService.findDtoByLogin(UserService.getCurrentUser().getUsername());
         if(user == null)
             return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
-        userService.updateUser(user.getEmail(), user.getFirstName(), user.getLastName());
+        UserDTO updatedUser = userService.updateUser(user.getEmail(), firstName, lastName).toDTO();
 
-        try {
-            response.sendRedirect("api/profile");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return new ResponseEntity<>(user, HttpStatus.OK);
+//        try {
+//            response.sendRedirect("api/profile");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 }

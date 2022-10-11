@@ -51,15 +51,17 @@ public class UserService {
 
 
     @Transactional
-    public void updateUser(String email, String firstName, String lastName) {
+    public CustomUser updateUser(String email, String firstName, String lastName) {
         CustomUser user = customUserRepository.findByLogin(email);
         if (user == null)
-            return;
+            return null;
 
         user.setFirstName(firstName);
         user.setLastName(lastName);
 
         customUserRepository.save(user);
+
+        return user;
     }
 
     @Transactional(readOnly = true)

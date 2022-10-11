@@ -7,6 +7,7 @@ import ua.com.foreach.models.Project;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor

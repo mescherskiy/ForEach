@@ -46,11 +46,11 @@ public class ProjectController {
                              @RequestParam Integer teamSize) {
         UserDetails user = UserService.getCurrentUser();
         Project project = projectService.addProject(name, description, user.getUsername(), language, teamSize);
-        try {
-            response.sendRedirect("api/projects");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            response.sendRedirect("api/projects");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         return new ResponseEntity<>(project.toDTO(), HttpStatus.CREATED);
     }
 

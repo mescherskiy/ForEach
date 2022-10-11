@@ -26,7 +26,7 @@ public class ApiController {
         List<Object> list = List.of(userService.findDtoByPattern(pattern, null),
                 projectService.findDtoByPattern(pattern, null));
         if(list == null || list.isEmpty())
-            return new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(list, HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(list, HttpStatus.FOUND);
 
     }
