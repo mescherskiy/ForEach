@@ -15,13 +15,12 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
-    public void register (HttpServletResponse response, @RequestParam(name = "email") String email,
+    public void register (@RequestParam(name = "email") String email,
                           @RequestParam(name = "firstname") String firstName,
                           @RequestParam(name = "lastname") String lastName,
                           @RequestParam(name = "password") String password,
-                          @RequestParam(name = "language") String[] languages) throws IOException {
+                          @RequestParam(name = "language") String[] languages){
         registrationService.register(email, password, firstName, lastName, languages);
-        response.sendRedirect("/login");
     }
 
     @GetMapping("/confirm")

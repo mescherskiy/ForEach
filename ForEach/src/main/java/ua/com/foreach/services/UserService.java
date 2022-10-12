@@ -19,13 +19,9 @@ public class UserService {
 
     private final CustomUserRepository customUserRepository;
 
-    public UserService(CustomUserRepository customUserRepository) {
-        this.customUserRepository = customUserRepository;
-    }
-
     @Transactional(readOnly = true)
     public CustomUser findByLogin(String login) {
-        return customUserRepository.findByLogin(login);
+        return customUserRepository.findByEmail(login).get();
     }
 
     @Transactional(readOnly = true)
@@ -40,7 +36,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDTO findDtoByLogin(String login) {
-        return customUserRepository.findByLogin(login).toDTO();
+        return customUserRepository.findByEmail(login).get().toDTO();
     }
 
     @Transactional(readOnly = true)
@@ -55,17 +51,12 @@ public class UserService {
 
 
     @Transactional
-    public CustomUser updateUser(String email, String firstName, String lastName) {
-        CustomUser user = customUserRepository.findByLogin(email);
-        if (user == null)
-            return null;
+    public UserDTO updateUser(String firstName, String lastName, String email) {
+        customUserRepository.flush();
 
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
+        customUserRepository.updateUser(firstName, lastName, email);
 
-        customUserRepository.save(user);
-
-        return user;
+        return customUserRepository.findByEmail(email).get().toDTO();
     }
 
     @Transactional(readOnly = true)

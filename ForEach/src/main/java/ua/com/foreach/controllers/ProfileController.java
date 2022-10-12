@@ -32,19 +32,15 @@ public class ProfileController {
     }
 
 
-    @PostMapping("/update")
-    public ResponseEntity<UserDTO> update(HttpServletResponse response, @RequestParam(required = false) String firstName,
-                                          @RequestParam(required = false) String lastName) {
-        UserDTO user = userService.findDtoByLogin(UserService.getCurrentUser().getUsername());
-        if(user == null)
-            return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
-        UserDTO updatedUser = userService.updateUser(user.getEmail(), firstName, lastName).toDTO();
+    @PutMapping("/update")
+    public ResponseEntity<UserDTO> update(@RequestParam(required = false, name = "firstname") String firstName,
+                                          @RequestParam(required = false, name = "lastname") String lastName) {
+        String email = UserService.getCurrentUser().getUsername();
+        if(email == null)
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-//        try {
-//            response.sendRedirect("api/profile");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        UserDTO updatedUser = userService.updateUser(firstName, lastName, email);
+
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 }

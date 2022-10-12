@@ -30,30 +30,6 @@ public class ProjectController {
             return new ResponseEntity<>(projects, HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(projects, HttpStatus.OK); }
 
-    @GetMapping("/add")
-    public void getNewProjectPage(HttpServletResponse response) {
-        try {
-            response.sendRedirect("/api/projects/add");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<ProjectDTO> add(HttpServletResponse response, @RequestParam String name,
-                             @RequestParam String description,
-                             @RequestParam String[] language,
-                             @RequestParam Integer teamSize) {
-        UserDetails user = UserService.getCurrentUser();
-        Project project = projectService.addProject(name, description, user.getUsername(), language, teamSize);
-//        try {
-//            response.sendRedirect("api/projects");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        return new ResponseEntity<>(project.toDTO(), HttpStatus.CREATED);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDTO> getById(@PathVariable Long id) {
         ProjectDTO projectDTO = projectService.findById(id).toDTO();
@@ -61,4 +37,26 @@ public class ProjectController {
             return new ResponseEntity<>(projectDTO, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
+
+//    @GetMapping("/add")
+//    public void getNewProjectPage(HttpServletResponse response) {
+//        try {
+//            response.sendRedirect("/api/projects/add");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+    @PostMapping("/add")
+    public ResponseEntity<ProjectDTO> add(@RequestParam String name,
+                             @RequestParam String description,
+                             @RequestParam String[] language,
+                             @RequestParam Integer teamSize) {
+        UserDetails user = UserService.getCurrentUser();
+        Project project = projectService.addProject(name, description, user.getUsername(), language, teamSize);
+
+        return new ResponseEntity<>(project.toDTO(), HttpStatus.CREATED);
+    }
+
+
 }

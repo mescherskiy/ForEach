@@ -18,8 +18,6 @@ import java.util.Optional;
 public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
     Optional<CustomUser> findByEmail(String email);
 
-    Optional<UserDTO> findDtoByEmail(String email);
-
 
     @Transactional
     @Modifying
@@ -33,8 +31,11 @@ public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
             "SET a.password = ?1 WHERE a.id = ?2")
     int updateUserPassword(String newPassword, Long user_id);
 
-    @Query("SELECT u FROM CustomUser u where u.email = :login")
-    UserDTO findDtoByLogin(@Param("login") String login);
+    @Transactional
+    @Modifying
+    @Query("UPDATE CustomUser a " +
+            "SET a.firstName = ?1, a.lastName =?2 WHERE a.email = ?3")
+    void updateUser(String firstName, String lastName, String email);
 
 
     @Query("SELECT u FROM CustomUser u WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :pattern, '%')) " +
