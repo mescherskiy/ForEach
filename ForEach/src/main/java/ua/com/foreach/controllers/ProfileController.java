@@ -3,11 +3,14 @@ package ua.com.foreach.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.com.foreach.dto.ProjectDTO;
 import ua.com.foreach.dto.UserDTO;
+import ua.com.foreach.models.Project;
 import ua.com.foreach.services.UserService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/profile")
@@ -33,14 +36,18 @@ public class ProfileController {
 
 
     @PutMapping("/update")
-    public ResponseEntity<UserDTO> update(@RequestParam(required = false, name = "firstname") String firstName,
-                                          @RequestParam(required = false, name = "lastname") String lastName) {
+    public ResponseEntity<UserDTO> update(@RequestParam(required = false, name = "fullname") String fullName) {
         String email = UserService.getCurrentUser().getUsername();
         if(email == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        UserDTO updatedUser = userService.updateUser(firstName, lastName, email);
+        UserDTO updatedUser = userService.updateUser(fullName, email);
 
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @GetMapping("/projects")
+    public ResponseEntity<List<ProjectDTO>> getProjects() {
+        return new ResponseEntity<>(userService.getProjects(), HttpStatus.OK);
     }
 }

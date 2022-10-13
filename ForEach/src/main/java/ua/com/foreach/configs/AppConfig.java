@@ -50,8 +50,7 @@ public class AppConfig implements WebMvcConfigurer {
 
                 CustomUser user = new CustomUser("mescherskiy.alexandr@gmail.com",
                         passwordEncoder.encode("123"),
-                        "Александр",
-                        "Мещерский",
+                        "Александр Мещерский",
                         Role.USER,
                         Set.of(languageRepository.findByLanguage("Java").get()),
                         List.of(project),
@@ -65,8 +64,7 @@ public class AppConfig implements WebMvcConfigurer {
 
                 customUserRepository.save(new CustomUser("user@gmail.com",
                         passwordEncoder.encode("123"),
-                        "Юзер",
-                        "Юзеров",
+                        "Юзер Юзеров",
                         Role.USER,
                         Set.of(languageRepository.findByLanguage("HTML").get(), languageRepository.findByLanguage("CSS").get()),
                         false,
@@ -74,8 +72,7 @@ public class AppConfig implements WebMvcConfigurer {
 
                 customUserRepository.save(new CustomUser("admin@gmail.com",
                         passwordEncoder.encode("123"),
-                        "Админ",
-                        "Админов",
+                        "Админ Админов",
                         Role.ADMIN,
                         Set.of(languageRepository.findByLanguage("JavaScript").get()),
                         false,

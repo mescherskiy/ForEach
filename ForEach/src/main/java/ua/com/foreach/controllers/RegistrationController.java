@@ -16,11 +16,10 @@ public class RegistrationController {
 
     @PostMapping
     public void register (@RequestParam(name = "email") String email,
-                          @RequestParam(name = "firstname") String firstName,
-                          @RequestParam(name = "lastname") String lastName,
+                          @RequestParam(name = "fullname") String fullName,
                           @RequestParam(name = "password") String password,
                           @RequestParam(name = "language") String[] languages){
-        registrationService.register(email, password, firstName, lastName, languages);
+        registrationService.register(email, password, fullName, languages);
     }
 
     @GetMapping("/confirm")

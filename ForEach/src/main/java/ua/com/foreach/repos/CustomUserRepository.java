@@ -34,12 +34,11 @@ public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
     @Transactional
     @Modifying
     @Query("UPDATE CustomUser a " +
-            "SET a.firstName = ?1, a.lastName =?2 WHERE a.email = ?3")
-    void updateUser(String firstName, String lastName, String email);
+            "SET a.fullName = ?1 WHERE a.email = ?2")
+    void updateUser(String fullName, String email);
 
 
-    @Query("SELECT u FROM CustomUser u WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :pattern, '%')) " +
-            "OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :pattern, '%'))" +
+    @Query("SELECT u FROM CustomUser u WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :pattern, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :pattern, '%'))")
     List<CustomUser> findByPattern(@Param("pattern") String pattern,
                                 Pageable pageable);

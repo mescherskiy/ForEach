@@ -25,10 +25,8 @@ public class CustomUser implements UserDetails {
     private String email;
     @Column(name = "password")
     private String password;
-    @Column(name = "first_name")
-    private String firstName;
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
     private Role role;
@@ -52,27 +50,32 @@ public class CustomUser implements UserDetails {
 
     private String avatarFileName = "default.jpg";
 
-    public CustomUser(String email, String password, String firstName, String lastName, Role role, Set<ProgrammingLanguage> languages, Boolean locked, Boolean enabled) {
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "contacts_id")
+    private Contacts contacts = new Contacts();
+
+    public CustomUser(String email, String password, String fullName, Role role, Set<ProgrammingLanguage> languages, Boolean locked, Boolean enabled) {
         this.email = email;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.fullName = fullName;
         this.role = role;
         this.languages = languages;
         this.locked = locked;
         this.enabled = enabled;
+        contacts.setEmail(email);
     }
 
-    public CustomUser(String email, String password, String firstName, String lastName, Role role, Set<ProgrammingLanguage> languages, List<Project> projects, Boolean locked, Boolean enabled) {
+    public CustomUser(String email, String password, String fullName, Role role, Set<ProgrammingLanguage> languages, List<Project> projects, Boolean locked, Boolean enabled) {
         this.email = email;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.fullName = fullName;
         this.role = role;
         this.languages = languages;
         this.projects = projects;
         this.locked = locked;
         this.enabled = enabled;
+        contacts.setEmail(email);
     }
 
     @Override
@@ -113,12 +116,12 @@ public class CustomUser implements UserDetails {
     }
 
     public UserDTO toDTO () {
-        return UserDTO.of(
+        return new UserDTO(
                 this.getEmail(),
-                this.getFirstName(),
-                this.getLastName(),
-                this.getLanguages(),
-                this.getProjects());
+                this.getFullName(),
+                this.getContacts(),
+                this.getLanguages().stream().map(ProgrammingLanguage::getLanguage).toList(),
+                this.getProjects().stream().map(Project::getName).toList());
     }
 
 

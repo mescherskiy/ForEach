@@ -41,7 +41,7 @@ public class ResetPasswordService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
         String link = "http://localhost:8080/reset_password/confirm?token=" + token;
-        emailSender.send(user.getEmail(), buildEmail(user.getFirstName(), link), MAIL_SUBJECT);
+        emailSender.send(user.getEmail(), buildEmail(user.getFullName(), link), MAIL_SUBJECT);
     }
 
     @Transactional

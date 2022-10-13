@@ -26,7 +26,7 @@ public class RegistrationService {
     private final static String MAIL_SUBJECT = "Confirm your email";
 
     @Transactional
-    public void register(String email, String password, String firstName, String lastName,
+    public void register(String email, String password, String fullName,
                          String[] languages) {
         boolean isValidEmail = emailValidator.test(email);
 
@@ -38,12 +38,12 @@ public class RegistrationService {
             langs.add(languageRepository.findByLanguage(language).get());
         }
 
-        CustomUser user = new CustomUser(email, password, firstName, lastName,
+        CustomUser user = new CustomUser(email, password, fullName,
                 Role.USER, langs, false, false);
         String token = userDetailsService.signUpUser(user);
 
         String link = "http://localhost:8080/registration/confirm?token=" + token;
-        emailSender.send(user.getEmail(), buildEmail(user.getFirstName(), link), MAIL_SUBJECT);
+        emailSender.send(user.getEmail(), buildEmail(user.getFullName(), link), MAIL_SUBJECT);
     }
 
 

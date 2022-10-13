@@ -6,8 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.com.foreach.dto.ProjectDTO;
 import ua.com.foreach.dto.UserDTO;
 import ua.com.foreach.models.CustomUser;
+import ua.com.foreach.models.Project;
 import ua.com.foreach.repos.CustomUserRepository;
 
 import java.io.IOException;
@@ -51,10 +53,10 @@ public class UserService {
 
 
     @Transactional
-    public UserDTO updateUser(String firstName, String lastName, String email) {
+    public UserDTO updateUser(String fullName, String email) {
         customUserRepository.flush();
 
-        customUserRepository.updateUser(firstName, lastName, email);
+        customUserRepository.updateUser(fullName, email);
 
         return customUserRepository.findByEmail(email).get().toDTO();
     }
@@ -81,6 +83,12 @@ public class UserService {
 
         user.setAvatarFileName(fileName);
         customUserRepository.save(user);
+    }
+
+    @Transactional
+    public List<ProjectDTO> getProjects() {
+        CustomUser user = findByLogin(getCurrentUser().getUsername());
+        return user.getProjects().stream().map(Project::toDTO).toList();
     }
 }
 
