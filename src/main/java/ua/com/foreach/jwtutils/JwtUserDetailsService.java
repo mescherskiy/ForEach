@@ -16,12 +16,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("Go to search");
         CustomUser customUser = userService.findByLogin(username);
         if (customUser == null){
             throw new UsernameNotFoundException("User not found with username: " + username);
         } else {
-            System.out.println("Out of search");
             return new User(customUser.getUsername(),
                     customUser.getPassword(),
                     customUser.getAuthorities());
