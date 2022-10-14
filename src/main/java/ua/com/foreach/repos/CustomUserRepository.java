@@ -18,6 +18,8 @@ import java.util.Optional;
 public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
     Optional<CustomUser> findByEmail(String email);
 
+    @Query("SELECT u FROM CustomUser u WHERE u.email= :email")
+    CustomUser findByEmailForJWT(@Param("email") String email);
 
     @Transactional
     @Modifying
