@@ -15,14 +15,14 @@ public class ProjectDTO {
     private String description;
     private String author;
     private Set<String> requiredLanguages;
-    private Integer numberOfTeamMembers;
+    private Boolean isOpen;
     private Set<String> teamMembers;
 
     public static ProjectDTO of(String name, String description, String author, Set<ProgrammingLanguage> languages,
-                                Integer numberOfTeamMembers, Set<CustomUser> teamMembers) {
+                                Boolean isOpen, Set<CustomUser> teamMembers) {
         return new ProjectDTO(name, description, author,
                 languages.stream().map(ProgrammingLanguage::getLanguage).collect(Collectors.toSet()),
-                numberOfTeamMembers,
+                isOpen,
                 teamMembers.stream().map(CustomUser::getEmail).collect(Collectors.toSet()));
     }
 }

@@ -27,12 +27,12 @@ public class ProjectService {
     }
 
     @Transactional
-    public Project addProject(String name, String description, String creator, String[] languages, Integer teamSize) {
+    public Project addProject(String name, String description, String creator, String[] languages) {
         Set<ProgrammingLanguage> langs = new HashSet<>();
         for (String language : languages) {
             langs.add(languageRepository.findByLanguage(language).get());
         }
-        Project project = new Project(name, description, creator, langs, teamSize);
+        Project project = new Project(name, description, creator, langs);
         CustomUser user = userService.findByLogin(creator);
         project.getTeamMembers().add(user);
         user.getProjects().add(project);

@@ -45,7 +45,7 @@ public class AppConfig implements WebMvcConfigurer {
                 Project project = new Project("Super app",
                         "This application will make happier every person in the world, except russians",
                         "mescherskiy.alexandr@gmail.com",
-                        Set.of(languageRepository.findByLanguage("Java").get()), 5 );
+                        Set.of(languageRepository.findByLanguage("Java").get()));
                 projectRepository.save(project);
 
                 CustomUser user = new CustomUser("mescherskiy.alexandr@gmail.com",

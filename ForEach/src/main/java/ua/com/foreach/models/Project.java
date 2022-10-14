@@ -8,6 +8,7 @@ import ua.com.foreach.dto.ProjectDTO;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,21 +32,27 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "language_id"))
     private Set<ProgrammingLanguage> requiredLanguages = new HashSet<>();
 
-    private Integer numberOfTeamMembers;
+    private Boolean isOpen = true;
 
     @ManyToMany(mappedBy = "projects")
     private Set<CustomUser> teamMembers = new HashSet<>();
 
-    public Project(String name, String description, String author, Set<ProgrammingLanguage> requiredLanguages, Integer numberOfTeamMembers) {
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "apply_id")
+    private List<Apply> applies;
+
+
+    public Project(String name, String description, String author, Set<ProgrammingLanguage> requiredLanguages) {
         this.name = name;
         this.description = description;
         this.author = author;
         this.requiredLanguages = requiredLanguages;
-        this.numberOfTeamMembers = numberOfTeamMembers;
     }
 
     public ProjectDTO toDTO() {
-        return ProjectDTO.of(this.name, this.description, this.author, this.requiredLanguages,
-                this.numberOfTeamMembers, this.teamMembers);
+        return ProjectDTO.of(this.name, this.description, this.author,
+                this.requiredLanguages,this.isOpen,
+                this.teamMembers);
     }
 }

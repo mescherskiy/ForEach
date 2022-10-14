@@ -55,7 +55,8 @@ public class CustomUser implements UserDetails {
     @JoinColumn(name = "contacts_id")
     private Contacts contacts = new Contacts();
 
-    public CustomUser(String email, String password, String fullName, Role role, Set<ProgrammingLanguage> languages, Boolean locked, Boolean enabled) {
+    public CustomUser(String email, String password, String fullName, Role role, Set<ProgrammingLanguage> languages,
+                      Boolean locked, Boolean enabled) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;

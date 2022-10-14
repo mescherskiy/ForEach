@@ -1,10 +1,14 @@
 package ua.com.foreach.controllers;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foreach.dto.ProjectDTO;
+import ua.com.foreach.models.Apply;
+import ua.com.foreach.models.CustomUser;
+import ua.com.foreach.models.ProgrammingLanguage;
 import ua.com.foreach.models.Project;
 import ua.com.foreach.services.ProjectService;
 import ua.com.foreach.services.UserService;
@@ -14,14 +18,11 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("api/projects")
 public class ProjectController {
     private final ProjectService projectService;
-
-    public ProjectController(ProjectService projectService) {
-        this.projectService = projectService;
-    }
-
+    private final UserService userService;
 
     @GetMapping()
     public ResponseEntity<List<ProjectDTO>> getAll() {
@@ -38,25 +39,25 @@ public class ProjectController {
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
-//    @GetMapping("/add")
-//    public void getNewProjectPage(HttpServletResponse response) {
-//        try {
-//            response.sendRedirect("/api/projects/add");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     @PostMapping("/add")
     public ResponseEntity<ProjectDTO> add(@RequestParam String name,
                              @RequestParam String description,
-                             @RequestParam String[] language,
-                             @RequestParam Integer teamSize) {
+                             @RequestParam String[] language) {
         UserDetails user = UserService.getCurrentUser();
-        Project project = projectService.addProject(name, description, user.getUsername(), language, teamSize);
+        Project project = projectService.addProject(name, description, user.getUsername(),
+                language);
 
         return new ResponseEntity<>(project.toDTO(), HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/join")
+    public ResponseEntity join(@PathVariable Long id) {
+        Project project = projectService.findById(id);
+        CustomUser user = userService.findByLogin(UserService.getCurrentUser().getUsername());
+        project.getApplies().add(new Apply(user.getFullName(),
+                user.getLanguages().stream().map(ProgrammingLanguage::getLanguage).toString(),
+                project));
+        return ResponseEntity.ok().build();
+    }
 
 }
