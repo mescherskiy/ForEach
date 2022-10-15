@@ -10,6 +10,8 @@ import ua.com.foreach.models.Apply;
 import ua.com.foreach.models.CustomUser;
 import ua.com.foreach.models.ProgrammingLanguage;
 import ua.com.foreach.models.Project;
+import ua.com.foreach.repos.ApplyRepository;
+import ua.com.foreach.services.ApplyService;
 import ua.com.foreach.services.ProjectService;
 import ua.com.foreach.services.UserService;
 
@@ -23,6 +25,7 @@ import java.util.List;
 public class ProjectController {
     private final ProjectService projectService;
     private final UserService userService;
+    private final ApplyService applyService;
 
     @GetMapping()
     public ResponseEntity<List<ProjectDTO>> getAll() {
@@ -54,9 +57,7 @@ public class ProjectController {
     public ResponseEntity join(@PathVariable Long id) {
         Project project = projectService.findById(id);
         CustomUser user = userService.findByLogin(UserService.getCurrentUser().getUsername());
-        project.getApplies().add(new Apply(user.getFullName(),
-                user.getLanguages().stream().map(ProgrammingLanguage::getLanguage).toString(),
-                project));
+        applyService.add(project, user);
         return ResponseEntity.ok().build();
     }
 

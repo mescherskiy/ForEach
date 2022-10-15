@@ -78,6 +78,16 @@ public class AppConfig implements WebMvcConfigurer {
                         false,
                         true));
 
+                customUserRepository.save(new CustomUser("mescherskiy_alexandr@ukr.net",
+                        passwordEncoder.encode("123"),
+                        "Алекс",
+                        Role.ADMIN,
+                        Set.of(languageRepository.findByLanguage("Python").get(),
+                                languageRepository.findByLanguage("Go").get(),
+                                languageRepository.findByLanguage("Ruby").get()),
+                        false,
+                        true));
+
             }
         };
     }

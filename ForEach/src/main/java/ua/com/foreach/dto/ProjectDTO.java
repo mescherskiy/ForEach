@@ -23,6 +23,6 @@ public class ProjectDTO {
         return new ProjectDTO(name, description, author,
                 languages.stream().map(ProgrammingLanguage::getLanguage).collect(Collectors.toSet()),
                 isOpen,
-                teamMembers.stream().map(CustomUser::getEmail).collect(Collectors.toSet()));
+                teamMembers.stream().map(CustomUser::getLogin).collect(Collectors.toSet()));
     }
 }

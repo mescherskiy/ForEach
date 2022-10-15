@@ -19,4 +19,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "OR LOWER(p.author) LIKE LOWER(CONCAT('%', :pattern, '%'))")
     List<Project> findByPattern(@Param("pattern") String pattern,
                                    Pageable pageable);
+
+
 }

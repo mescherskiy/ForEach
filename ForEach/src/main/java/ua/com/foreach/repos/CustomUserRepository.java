@@ -16,14 +16,14 @@ import java.util.Optional;
 @Repository
 @Transactional(readOnly = true)
 public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
-    Optional<CustomUser> findByEmail(String email);
+    Optional<CustomUser> findByLogin(String login);
 
 
     @Transactional
     @Modifying
     @Query("UPDATE CustomUser a " +
-            "SET a.enabled = TRUE WHERE a.email = ?1")
-    int enableCustomUser(String email);
+            "SET a.enabled = TRUE WHERE a.login = ?1")
+    int enableCustomUser(String login);
 
     @Transactional
     @Modifying
@@ -34,12 +34,12 @@ public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
     @Transactional
     @Modifying
     @Query("UPDATE CustomUser a " +
-            "SET a.fullName = ?1 WHERE a.email = ?2")
-    void updateUser(String fullName, String email);
+            "SET a.fullName = ?1 WHERE a.login = ?2")
+    void updateUser(String fullName, String login);
 
 
     @Query("SELECT u FROM CustomUser u WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :pattern, '%')) " +
-            "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :pattern, '%'))")
+            "OR LOWER(u.login) LIKE LOWER(CONCAT('%', :pattern, '%'))")
     List<CustomUser> findByPattern(@Param("pattern") String pattern,
                                 Pageable pageable);
 

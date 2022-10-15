@@ -19,14 +19,14 @@ public class ResetPasswordService {
     private final EmailSender emailSender;
     private final static String MAIL_SUBJECT = "Reset password";
 
-    public void sendConfirmLink(String email) {
-        boolean isValidEmail = emailValidator.test(email);
+    public void sendConfirmLink(String login) {
+        boolean isValidEmail = emailValidator.test(login);
 
         if (!isValidEmail) {
             throw new IllegalArgumentException("email is not valid");
         }
 
-        CustomUser user = customUserRepository.findByEmail(email).
+        CustomUser user = customUserRepository.findByLogin(login).
                 orElseThrow(() -> new IllegalStateException("user not found!"));
 
         String token = UUID.randomUUID().toString();
@@ -41,7 +41,7 @@ public class ResetPasswordService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
         String link = "http://localhost:8080/reset_password/confirm?token=" + token;
-        emailSender.send(user.getEmail(), buildEmail(user.getFullName(), link), MAIL_SUBJECT);
+        emailSender.send(user.getLogin(), buildEmail(user.getFullName(), link), MAIL_SUBJECT);
     }
 
     @Transactional

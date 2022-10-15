@@ -1,9 +1,11 @@
 package ua.com.foreach.services;
 
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.foreach.dto.ProjectDTO;
+import ua.com.foreach.models.Apply;
 import ua.com.foreach.models.CustomUser;
 import ua.com.foreach.models.ProgrammingLanguage;
 import ua.com.foreach.models.Project;
@@ -15,16 +17,13 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserService userService;
     private final LanguageRepository languageRepository;
-
-    public ProjectService(ProjectRepository projectRepository, UserService userService, LanguageRepository languageRepository) {
-        this.projectRepository = projectRepository;
-        this.userService = userService;
-        this.languageRepository = languageRepository;
-    }
+    private final ApplyService applyService;
+    private final EmailService emailService;
 
     @Transactional
     public Project addProject(String name, String description, String creator, String[] languages) {
@@ -55,7 +54,7 @@ public class ProjectService {
     public List<Project> findAll() { return projectRepository.findAll(); }
 
     @Transactional
-    public Project findById (Long id) { return projectRepository.findById(id).orElse(null); }
+    public Project findById (Long id) { return projectRepository.findById(id).get(); }
 
     @Transactional(readOnly = true)
     public List<Project> findByPattern(String pattern, Pageable pageable) {
@@ -67,5 +66,29 @@ public class ProjectService {
         return projectRepository.findByPattern(pattern, pageable).stream().map(Project::toDTO).toList();
     }
 
+    @Transactional
+    public void addTeamMember(Project project, CustomUser user) {
+        project.getTeamMembers().add(user);
+        user.getProjects().add(project);
+    }
+
+    @Transactional
+    public void acceptApply(Long applyId) {
+        Apply apply = applyService.findById(applyId);
+        Long projectId = apply.getProject().getId();
+        Project project = projectRepository.findById(projectId).get();
+        addTeamMember(project, userService.findByLogin(apply.getCandidateUsername()));
+        String mailCaption = "Apply accepted!";
+        String mailText = "Your apply for project \"" + project.getName() + "\" was accepted. Welcome to the team!";
+        String mail = emailService.buildEmailWithoutLink(apply.getCandidateFullname(),
+                mailText, mailCaption);
+        emailService.send(apply.getCandidateUsername(), mail,"Apply accepted");
+        applyService.delete(applyId);
+    }
+
+    @Transactional
+    public void rejectApply(Long applyId) {
+        applyService.delete(applyId);
+    }
 
 }

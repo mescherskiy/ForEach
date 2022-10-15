@@ -1,7 +1,5 @@
 package ua.com.foreach.models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,14 +13,14 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "users")
 public class CustomUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "email")
-    private String email;
+    @Column(name = "login")
+    private String login;
     @Column(name = "password")
     private String password;
     @Column(name = "full_name")
@@ -55,20 +53,20 @@ public class CustomUser implements UserDetails {
     @JoinColumn(name = "contacts_id")
     private Contacts contacts = new Contacts();
 
-    public CustomUser(String email, String password, String fullName, Role role, Set<ProgrammingLanguage> languages,
+    public CustomUser(String login, String password, String fullName, Role role, Set<ProgrammingLanguage> languages,
                       Boolean locked, Boolean enabled) {
-        this.email = email;
+        this.login = login;
         this.password = password;
         this.fullName = fullName;
         this.role = role;
         this.languages = languages;
         this.locked = locked;
         this.enabled = enabled;
-        contacts.setEmail(email);
+        contacts.setEmail(login);
     }
 
-    public CustomUser(String email, String password, String fullName, Role role, Set<ProgrammingLanguage> languages, List<Project> projects, Boolean locked, Boolean enabled) {
-        this.email = email;
+    public CustomUser(String login, String password, String fullName, Role role, Set<ProgrammingLanguage> languages, List<Project> projects, Boolean locked, Boolean enabled) {
+        this.login = login;
         this.password = password;
         this.fullName = fullName;
         this.role = role;
@@ -76,7 +74,7 @@ public class CustomUser implements UserDetails {
         this.projects = projects;
         this.locked = locked;
         this.enabled = enabled;
-        contacts.setEmail(email);
+        contacts.setEmail(login);
     }
 
     @Override
@@ -93,7 +91,7 @@ public class CustomUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return login;
     }
 
     @Override
@@ -118,12 +116,21 @@ public class CustomUser implements UserDetails {
 
     public UserDTO toDTO () {
         return new UserDTO(
-                this.getEmail(),
+                this.getLogin(),
                 this.getFullName(),
                 this.getContacts(),
                 this.getLanguages().stream().map(ProgrammingLanguage::getLanguage).toList(),
                 this.getProjects().stream().map(Project::getName).toList());
     }
 
-
+    @Override
+    public String toString() {
+        return "CustomUser{" +
+                "login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", role=" + role +
+                ", contacts=" + contacts +
+                '}';
+    }
 }

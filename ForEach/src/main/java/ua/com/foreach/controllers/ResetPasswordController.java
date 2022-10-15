@@ -25,8 +25,8 @@ public class ResetPasswordController {
 
     @PostMapping
     public void sendLink(HttpServletResponse response,
-                         @RequestParam(name = "email") String email) throws IOException {
-        resetPasswordService.sendConfirmLink(email);
+                         @RequestParam(name = "login") String login) throws IOException {
+        resetPasswordService.sendConfirmLink(login);
         response.sendRedirect("/login");
     }
 
@@ -34,8 +34,6 @@ public class ResetPasswordController {
     public String confirm(@RequestParam("token") String token) {
         resetPasswordService.confirmToken(token);
         return token;
-//        model.addAttribute("token", token);
-//        return "reset_password_form";
     }
 
     @PostMapping("/reset")

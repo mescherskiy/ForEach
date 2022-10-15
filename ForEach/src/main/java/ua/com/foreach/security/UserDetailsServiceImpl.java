@@ -26,16 +26,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             "user with email %s not found";
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        return userRepository.findByLogin(login)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(
-                                String.format(USER_NOT_FOUND_MSG, email)));
+                                String.format(USER_NOT_FOUND_MSG, login)));
     }
 
     public String signUpUser(CustomUser customUser) {
         boolean userExists = userRepository
-                .findByEmail(customUser.getEmail())
+                .findByLogin(customUser.getLogin())
                 .isPresent();
 
         if (userExists) {
@@ -69,8 +69,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return token;
     }
 
-    public int enableCustomUser(String email) {
-        return userRepository.enableCustomUser(email);
+    public int enableCustomUser(String login) {
+        return userRepository.enableCustomUser(login);
     }
 
 }

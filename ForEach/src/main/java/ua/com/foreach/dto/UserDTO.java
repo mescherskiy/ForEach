@@ -13,15 +13,9 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 public class UserDTO {
-    private String email;
+    private String login;
     private String fullName;
     private Contacts contacts;
     private List<String> languages;
     private List<String> projects;
-
-//    public UserDTO of(String email, String fullName, Set<ProgrammingLanguage> languages, List<Project> projects) {
-//        return new UserDTO(email, fullName, contacts,
-//                languages.stream().map(ProgrammingLanguage::getLanguage).toList(),
-//                projects.stream().map(Project::getName).toList());
-//    }
 }

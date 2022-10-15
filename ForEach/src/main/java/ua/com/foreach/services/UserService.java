@@ -27,7 +27,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public CustomUser findByLogin(String login) {
-        return customUserRepository.findByEmail(login).get();
+        return customUserRepository.findByLogin(login).get();
     }
 
     @Transactional(readOnly = true)
@@ -42,7 +42,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDTO findDtoByLogin(String login) {
-        return customUserRepository.findByEmail(login).get().toDTO();
+        return customUserRepository.findByLogin(login).get().toDTO();
     }
 
     @Transactional(readOnly = true)
@@ -57,12 +57,12 @@ public class UserService {
 
 
     @Transactional
-    public UserDTO updateUser(String fullName, String email) {
+    public UserDTO updateUser(String fullName, String login) {
         customUserRepository.flush();
 
-        customUserRepository.updateUser(fullName, email);
+        customUserRepository.updateUser(fullName, login);
 
-        return customUserRepository.findByEmail(email).get().toDTO();
+        return customUserRepository.findByLogin(login).get().toDTO();
     }
 
     @Transactional(readOnly = true)
