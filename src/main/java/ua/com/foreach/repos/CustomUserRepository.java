@@ -18,6 +18,8 @@ import java.util.Optional;
 public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
     Optional<CustomUser> findByLogin(String login);
 
+    @Query("SELECT u FROM CustomUser u WHERE u.login= :login")
+    CustomUser findByEmailForJWT(@Param("login") String login);
 
     @Transactional
     @Modifying
@@ -41,6 +43,6 @@ public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
     @Query("SELECT u FROM CustomUser u WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :pattern, '%')) " +
             "OR LOWER(u.login) LIKE LOWER(CONCAT('%', :pattern, '%'))")
     List<CustomUser> findByPattern(@Param("pattern") String pattern,
-                                Pageable pageable);
+                                   Pageable pageable);
 
 }
