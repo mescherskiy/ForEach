@@ -1,7 +1,6 @@
 package ua.com.foreach.services;
 
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.foreach.dto.ApplyDTO;
@@ -18,7 +17,7 @@ import java.util.List;
 public class ApplyService {
     private final ApplyRepository applyRepository;
     private final EmailService emailService;
-    private final UserService userService;
+    private final CustomUserService customUserService;
 
     @Transactional
     public void save(Apply apply) { applyRepository.save(apply); }
@@ -43,7 +42,7 @@ public class ApplyService {
         String mailCaption = "New apply incoming";
         String mailText = "You have a new apply. " + apply.getCandidateFullname() +
                 " wants to join your project \"" + project.getName() + "\". Click below for more details:";
-        String mail = emailService.buildEmailWithLink(userService.findByLogin(project.getAuthor()).getFullName(),
+        String mail = emailService.buildEmailWithLink(customUserService.findByLogin(project.getAuthor()).getFullName(),
                 mailText, mailCaption, link);
         emailService.send(project.getAuthor(), mail,"New apply");
     }

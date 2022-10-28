@@ -14,8 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/reset_password")
+@CrossOrigin
 @AllArgsConstructor
+@RequestMapping("/reset_password")
 
 public class ResetPasswordController {
     private final ResetPasswordService resetPasswordService;

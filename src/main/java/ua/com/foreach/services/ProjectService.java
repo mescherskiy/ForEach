@@ -20,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final UserService userService;
+    private final CustomUserService customUserService;
     private final LanguageRepository languageRepository;
     private final ApplyService applyService;
     private final EmailService emailService;
@@ -32,7 +32,7 @@ public class ProjectService {
             langs.add(languageRepository.findByLanguage(language).get());
         }
         Project project = new Project(name, description, creator, langs);
-        CustomUser user = userService.findByLogin(creator);
+        CustomUser user = customUserService.findByLogin(creator);
         project.getTeamMembers().add(user);
         user.getProjects().add(project);
         projectRepository.save(project);
@@ -46,7 +46,7 @@ public class ProjectService {
 
     @Transactional(readOnly = true)
     public List<Project> findByAuthor(String author) {
-        CustomUser user = userService.findByLogin(author);
+        CustomUser user = customUserService.findByLogin(author);
         return user.getProjects();
     }
 
@@ -77,7 +77,7 @@ public class ProjectService {
         Apply apply = applyService.findById(applyId);
         Long projectId = apply.getProject().getId();
         Project project = projectRepository.findById(projectId).get();
-        addTeamMember(project, userService.findByLogin(apply.getCandidateUsername()));
+        addTeamMember(project, customUserService.findByLogin(apply.getCandidateUsername()));
         String mailCaption = "Apply accepted!";
         String mailText = "Your apply for project \"" + project.getName() + "\" was accepted. Welcome to the team!";
         String mail = emailService.buildEmailWithoutLink(apply.getCandidateFullname(),

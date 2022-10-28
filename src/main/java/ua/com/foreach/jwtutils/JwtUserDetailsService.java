@@ -7,12 +7,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.com.foreach.models.CustomUser;
-import ua.com.foreach.services.UserService;
+import ua.com.foreach.services.CustomUserService;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
-    private UserService userService;
+    private CustomUserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

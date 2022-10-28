@@ -8,8 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/registration")
+@CrossOrigin
 @AllArgsConstructor
+@RequestMapping("/registration")
 public class RegistrationController {
 
     private final RegistrationService registrationService;

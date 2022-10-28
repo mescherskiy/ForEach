@@ -6,25 +6,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foreach.dto.ProjectDTO;
-import ua.com.foreach.models.Apply;
 import ua.com.foreach.models.CustomUser;
-import ua.com.foreach.models.ProgrammingLanguage;
 import ua.com.foreach.models.Project;
-import ua.com.foreach.repos.ApplyRepository;
 import ua.com.foreach.services.ApplyService;
 import ua.com.foreach.services.ProjectService;
-import ua.com.foreach.services.UserService;
+import ua.com.foreach.services.CustomUserService;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin
 @RequestMapping("api/projects")
 public class ProjectController {
     private final ProjectService projectService;
-    private final UserService userService;
+    private final CustomUserService customUserService;
     private final ApplyService applyService;
 
     @GetMapping()
@@ -46,7 +42,7 @@ public class ProjectController {
     public ResponseEntity<ProjectDTO> add(@RequestParam String name,
                              @RequestParam String description,
                              @RequestParam String[] language) {
-        UserDetails user = UserService.getCurrentUser();
+        UserDetails user = CustomUserService.getCurrentUser();
         Project project = projectService.addProject(name, description, user.getUsername(),
                 language);
 
@@ -56,7 +52,7 @@ public class ProjectController {
     @PostMapping("/{id}/join")
     public ResponseEntity join(@PathVariable Long id) {
         Project project = projectService.findById(id);
-        CustomUser user = userService.findByLogin(UserService.getCurrentUser().getUsername());
+        CustomUser user = customUserService.findByLogin(CustomUserService.getCurrentUser().getUsername());
         applyService.add(project, user);
         return ResponseEntity.ok().build();
     }

@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.foreach.models.CustomUser;
 import ua.com.foreach.services.ImageService;
-import ua.com.foreach.services.UserService;
+import ua.com.foreach.services.CustomUserService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,22 +16,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RestController
+@CrossOrigin
 @AllArgsConstructor
 @RequestMapping("api/")
 public class UploadImageController {
-    private UserService userService;
+    private CustomUserService customUserService;
     private ImageService imageService;
 
     @PostMapping("/uploadImage")
     public ResponseEntity uploadImage(@RequestParam("imageFile") MultipartFile imageFile) {
-        String login = UserService.getCurrentUser().getUsername();
-        CustomUser customUser = userService.findByLogin(login);
+        String login = CustomUserService.getCurrentUser().getUsername();
+        CustomUser customUser = customUserService.findByLogin(login);
         Long userId = customUser.getId();
         String fileName = userId + ".jpg";
 
         try {
             imageService.saveAvatar(imageFile, fileName);
-            userService.updateAvatar(customUser, fileName);
+            customUserService.updateAvatar(customUser, fileName);
             return ResponseEntity.ok().build();
         } catch (IOException e) {
             e.printStackTrace();
@@ -61,7 +61,7 @@ public class UploadImageController {
     }
     @PostMapping("/deleteImage")
     public ResponseEntity deleteImage() {
-        CustomUser user = userService.findByLogin(UserService.getCurrentUser().getUsername());
+        CustomUser user = customUserService.findByLogin(CustomUserService.getCurrentUser().getUsername());
 
         user.setAvatarFileName("default.jpg");
 

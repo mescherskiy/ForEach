@@ -53,6 +53,11 @@ public class CustomUser implements UserDetails {
     @JoinColumn(name = "contacts_id")
     private Contacts contacts = new Contacts();
 
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+
     public CustomUser(String login, String password, String fullName, Role role, Set<ProgrammingLanguage> languages,
                       Boolean locked, Boolean enabled) {
         this.login = login;
@@ -75,6 +80,32 @@ public class CustomUser implements UserDetails {
         this.locked = locked;
         this.enabled = enabled;
         contacts.setEmail(login);
+    }
+
+    public static CustomUser createGoogleUser(String email, String name, String pictureUrl){
+        CustomUser user = new CustomUser();
+        user.setLogin(email);
+        user.setFullName(name);
+        user.setAvatarFileName(pictureUrl);
+        user.setProvider(AuthProvider.GOOGLE);
+        user.setRole(Role.USER);
+        user.setLocked(false);
+        user.setEnabled(true);
+        Contacts userContacts = new Contacts();
+        userContacts.setEmail(email);
+        user.setContacts(userContacts);
+        user.setProjects(new ArrayList<>());
+        user.setLanguages(new HashSet<>());
+        user.setPassword("$2a$10$Gqwv7knnPfgUIWmH1fq7oelfvFK2fJog8aV9BRKTvJuQul6pFDyLa");
+        return user;
+    }
+
+    public AuthProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
     }
 
     @Override
@@ -133,4 +164,5 @@ public class CustomUser implements UserDetails {
                 ", contacts=" + contacts +
                 '}';
     }
+
 }

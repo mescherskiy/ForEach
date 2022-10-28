@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import ua.com.foreach.dto.ProjectDTO;
 import ua.com.foreach.dto.UserDTO;
 import ua.com.foreach.models.CustomUser;
@@ -15,14 +14,11 @@ import ua.com.foreach.models.Project;
 import ua.com.foreach.repos.CustomUserRepository;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class CustomUserService {
 
     @Autowired
     private final CustomUserRepository customUserRepository;

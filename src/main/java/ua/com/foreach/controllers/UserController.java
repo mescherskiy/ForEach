@@ -3,29 +3,27 @@ package ua.com.foreach.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import ua.com.foreach.dto.UserDTO;
-import ua.com.foreach.models.CustomUser;
-import ua.com.foreach.repos.CustomUserRepository;
-import ua.com.foreach.services.UserService;
+import ua.com.foreach.services.CustomUserService;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/users")
 public class UserController {
-    private final UserService userService;
+    private final CustomUserService customUserService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(CustomUserService customUserService) {
+        this.customUserService = customUserService;
     }
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAll() {
-        List<UserDTO> users = userService.getAllDto();
+        List<UserDTO> users = customUserService.getAllDto();
         if (users.isEmpty()) {
             return new ResponseEntity<>(users, HttpStatus.NO_CONTENT);
         }
@@ -34,7 +32,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getById(@PathVariable Long id) {
-        UserDTO user = userService.getDtoById(id);
+        UserDTO user = customUserService.getDtoById(id);
         if(user == null)
             return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(user, HttpStatus.OK);

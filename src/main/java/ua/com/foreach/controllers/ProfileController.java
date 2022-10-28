@@ -7,28 +7,25 @@ import org.springframework.web.bind.annotation.*;
 import ua.com.foreach.dto.ApplyDTO;
 import ua.com.foreach.dto.ProjectDTO;
 import ua.com.foreach.dto.UserDTO;
-import ua.com.foreach.models.Apply;
-import ua.com.foreach.models.Project;
 import ua.com.foreach.services.ApplyService;
 import ua.com.foreach.services.ProjectService;
-import ua.com.foreach.services.UserService;
+import ua.com.foreach.services.CustomUserService;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin
 @RequestMapping("api/profile")
 public class ProfileController {
-    private final UserService userService;
+    private final CustomUserService customUserService;
     private final ApplyService applyService;
     private final ProjectService projectService;
 
 
     @GetMapping
     public ResponseEntity<UserDTO> getProfile() {
-        UserDTO user = userService.findByLogin(UserService.getCurrentUser().getUsername()).toDTO();
+        UserDTO user = customUserService.findByLogin(CustomUserService.getCurrentUser().getUsername()).toDTO();
         if(user == null)
             return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -42,18 +39,18 @@ public class ProfileController {
 
     @PutMapping("/update")
     public ResponseEntity<UserDTO> update(@RequestParam(required = false, name = "fullname") String fullName) {
-        String login = UserService.getCurrentUser().getUsername();
+        String login = CustomUserService.getCurrentUser().getUsername();
         if(login == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        UserDTO updatedUser = userService.updateUser(fullName, login);
+        UserDTO updatedUser = customUserService.updateUser(fullName, login);
 
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @GetMapping("/projects")
     public ResponseEntity<List<ProjectDTO>> getProjects() {
-        return new ResponseEntity<>(userService.getProjects(), HttpStatus.OK);
+        return new ResponseEntity<>(customUserService.getProjects(), HttpStatus.OK);
     }
 
     @GetMapping("/projects/applies")

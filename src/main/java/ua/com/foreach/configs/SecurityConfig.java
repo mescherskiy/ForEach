@@ -1,6 +1,6 @@
 package ua.com.foreach.configs;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,18 +20,11 @@ import ua.com.foreach.security.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@AllArgsConstructor
 public class SecurityConfig {
-
-    @Autowired
     private JwtUserDetailsService userDetailsService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
-
-    @Autowired
     private JwtFilter filter;
 
     @Bean
@@ -40,7 +33,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .csrf().disable()
-                .authorizeRequests().antMatchers("/login","/v3/api-docs/**","/swagger-ui/**").permitAll()
+                .authorizeRequests().antMatchers("/login", "/v3/api-docs/**", "/swagger-ui/**", "/login/google").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
