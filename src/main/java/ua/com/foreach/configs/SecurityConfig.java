@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .csrf().disable()
-                .authorizeRequests().antMatchers("/login", "/v3/api-docs/**", "/swagger-ui/**", "/login/google").permitAll()
+                .authorizeRequests().antMatchers("/login", "/v3/api-docs/**", "/swagger-ui/**", "/login/google","/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
